@@ -1,9 +1,8 @@
-import Link from 'next/link'
 import DatabaseStatus from '@/components/UI/DatabaseStatus'
-import {getAdminStats, testDatabaseConnection} from "@/utils/database";
+import { getAdminStats, testDatabaseConnection } from "@/utils/database"
 import AdminLinkCard from '@/components/UI/AdminLinkCard'
 
-export default async function Page() {
+export default async function AdminPage() {
     const [stats, dbStatus] = await Promise.all([
         getAdminStats(),
         testDatabaseConnection()

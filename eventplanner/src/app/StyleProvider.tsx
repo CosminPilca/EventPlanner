@@ -1,14 +1,33 @@
 'use client'
-import {ThemeProvider} from "next-themes";
+import { ThemeProvider } from "next-themes";
+import { useEffect } from "react";
 
-
-// @ts-ignore
-export const StyleProvider: React.PropsWithChildren<any> = ({children}) => {
-    return (
-        <ThemeProvider attribute = "class" defaultTheme="system" enableSystem={true} disableTransitionOnChange={true}>
-            {children}
-            </ThemeProvider>
-    )
+interface StyleProviderProps {
+    children: React.ReactNode;
 }
 
-export default StyleProvider;
+export default function StyleProvider({ children }: StyleProviderProps) {
+    useEffect(() => {
+        const initializeTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+            document.documentElement.setAttribute('data-theme', initialTheme);
+        };
+
+        initializeTheme();
+    }, []);
+
+    return (
+        <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="system"
+            enableSystem={true}
+            disableTransitionOnChange={false}
+            storageKey="theme"
+        >
+            {children}
+        </ThemeProvider>
+    );
+}

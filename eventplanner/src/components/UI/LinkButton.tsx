@@ -11,10 +11,10 @@ interface LinkButtonProps {
 }
 
 const variantStyles = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
-    secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 focus:ring-gray-500',
-    ghost: 'text-gray-700 hover:text-blue-600 hover:bg-blue-50',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
+    primary: 'border border-transparent theme-transition focus:ring-2 focus:ring-offset-2 hover:brightness-90',
+    secondary: 'bg-theme-secondary border border-theme-secondary text-theme-secondary hover-theme-bg theme-transition focus:ring-2 focus:ring-offset-2',
+    ghost: 'text-theme-secondary hover-theme-bg bg-transparent border-transparent theme-transition',
+    danger: 'border border-transparent theme-transition focus:ring-2 focus:ring-offset-2 hover:brightness-90',
 };
 
 const sizeStyles = {
@@ -31,18 +31,55 @@ export default function LinkButton({
                                        className = '',
                                        fullWidth = false
                                    }: LinkButtonProps) {
+    const getVariantStyle = () => {
+        const baseStyle: React.CSSProperties = {
+            transition: 'all 0.2s ease',
+            outline: 'none',
+        };
+
+        switch (variant) {
+            case 'primary':
+                return {
+                    ...baseStyle,
+                    backgroundColor: 'var(--color-primary)',
+                    color: 'var(--color-primary-foreground)',
+                };
+            case 'secondary':
+                return {
+                    ...baseStyle,
+                    backgroundColor: 'var(--color-secondary)',
+                    color: 'var(--color-secondary-foreground)',
+                    borderColor: 'var(--color-border)',
+                };
+            case 'ghost':
+                return {
+                    ...baseStyle,
+                    backgroundColor: 'transparent',
+                    color: 'var(--color-text-secondary)',
+                };
+            case 'danger':
+                return {
+                    ...baseStyle,
+                    backgroundColor: 'var(--color-destructive)',
+                    color: 'var(--color-destructive-foreground)',
+                };
+            default:
+                return baseStyle;
+        }
+    };
+
     return (
         <Link
             href={href}
             className={classNames(
-                'font-medium rounded-lg transition-colors duration-200',
-                'focus:outline-none focus:ring-2 focus:ring-offset-2',
-                'inline-block text-center',
+                'font-medium rounded-lg transition-all duration-200',
+                'focus:outline-none inline-block text-center',
                 variantStyles[variant],
                 sizeStyles[size],
                 fullWidth && 'w-full',
                 className
             )}
+            style={getVariantStyle()}
         >
             {children}
         </Link>

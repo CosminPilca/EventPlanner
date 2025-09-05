@@ -1,6 +1,7 @@
 'use server'
 import { prisma } from './prisma'
 import { revalidatePath } from 'next/cache'
+import { geocodeAddress } from './geocoding'
 
 export async function createEvent(formData: FormData) {
     const title = formData.get('title')?.toString() || ''
@@ -17,6 +18,19 @@ export async function createEvent(formData: FormData) {
     }
 
     try {
+        let latitude: number | null = null
+        let longitude: number | null = null
+
+        try {
+            const geocoded = await geocodeAddress(location)
+            if (geocoded) {
+                latitude = geocoded.latitude
+                longitude = geocoded.longitude
+            }
+        } catch (error) {
+            console.warn('Geocoding failed:', error)
+        }
+
         const slug = title
             .toLowerCase()
             .trim()
@@ -32,6 +46,8 @@ export async function createEvent(formData: FormData) {
                 startsAt: new Date(startsAt),
                 endsAt: new Date(endsAt),
                 location,
+                latitude,
+                longitude,
                 categoryId,
                 organizerId,
                 imageUrl: imageUrl || null
@@ -41,66 +57,36 @@ export async function createEvent(formData: FormData) {
         revalidatePath('/events')
         revalidatePath('/admin/events')
 
-        return {
-            success: true,
-            eventId: event.id,
-            eventTitle: event.title
-        }
+        return { success: true, eventId: event.id, eventTitle: event.title }
     } catch (error) {
         console.error('Error creating event:', error)
-
         if (error && typeof error === 'object' && 'code' in error) {
             switch (error.code) {
-                case 'P2002':
-                    throw new Error('An event with this title already exists')
-                case 'P2003':
-                    throw new Error('Invalid category or organizer selected')
-                case 'P2025':
-                    throw new Error('Category or organizer not found')
-                default:
-                    throw new Error(`Database error: ${error.code}`)
+                case 'P2002': throw new Error('An event with this title already exists')
+                case 'P2003': throw new Error('Invalid category or organizer selected')
+                case 'P2025': throw new Error('Category or organizer not found')
+                default: throw new Error(`Database error: ${error.code}`)
             }
         }
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to create event'
-        throw new Error(errorMessage)
+        throw new Error(error instanceof Error ? error.message : 'Failed to create event')
     }
 }
 
 export async function createCategory(formData: FormData) {
     const name = formData.get('name')?.toString() || ''
-
-    if (!name) {
-        throw new Error('Category name is required')
-    }
+    if (!name) throw new Error('Category name is required')
 
     try {
-        const slug = name
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-
-        await prisma.category.create({
-            data: { name, slug }
-        })
-
+        const slug = name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-')
+        await prisma.category.create({ data: { name, slug } })
         revalidatePath('/admin/categories')
     } catch (error) {
         console.error('Error creating category:', error)
-
         if (error && typeof error === 'object' && 'code' in error) {
-            switch (error.code) {
-                case 'P2002':
-                    throw new Error('A category with this name already exists')
-                default:
-                    throw new Error(`Database error: ${error.code}`)
-            }
+            if (error.code === 'P2002') throw new Error('A category with this name already exists')
+            throw new Error(`Database error: ${error.code}`)
         }
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to create category'
-        throw new Error(errorMessage)
+        throw new Error(error instanceof Error ? error.message : 'Failed to create category')
     }
 }
 
@@ -120,6 +106,26 @@ export async function editEvent(formData: FormData) {
     }
 
     try {
+        const existingEvent = await prisma.event.findUnique({
+            where: { id: eventId },
+            select: { location: true, latitude: true, longitude: true }
+        })
+
+        let latitude: number | null = existingEvent?.latitude || null
+        let longitude: number | null = existingEvent?.longitude || null
+
+        if (existingEvent && existingEvent.location !== location) {
+            try {
+                const geocoded = await geocodeAddress(location)
+                if (geocoded) {
+                    latitude = geocoded.latitude
+                    longitude = geocoded.longitude
+                }
+            } catch (error) {
+                console.warn('Geocoding failed:', error)
+            }
+        }
+
         const slug = title
             .toLowerCase()
             .trim()
@@ -128,7 +134,7 @@ export async function editEvent(formData: FormData) {
             .replace(/-+/g, '-')
 
         const event = await prisma.event.update({
-            where: {id: eventId},
+            where: { id: eventId },
             data: {
                 title,
                 slug,
@@ -136,6 +142,8 @@ export async function editEvent(formData: FormData) {
                 startsAt: new Date(startsAt),
                 endsAt: new Date(endsAt),
                 location,
+                latitude,
+                longitude,
                 categoryId,
                 organizerId,
                 imageUrl: imageUrl || null
@@ -145,133 +153,85 @@ export async function editEvent(formData: FormData) {
         revalidatePath('/events')
         revalidatePath('/admin/events')
         revalidatePath('/admin/edit')
+        revalidatePath(`/events/${eventId}`)
 
-        return {
-            success: true,
-            eventId: event.id,
-            eventTitle: event.title
-        }
+        return { success: true, eventId: event.id, eventTitle: event.title }
     } catch (error) {
         console.error('Error updating event:', error)
-
         if (error && typeof error === 'object' && 'code' in error) {
             switch (error.code) {
-                case 'P2002':
-                    throw new Error('An event with this title already exists')
-                case 'P2003':
-                    throw new Error('Invalid category or organizer selected')
-                case 'P2025':
-                    throw new Error('Event not found')
-                default:
-                    throw new Error(`Database error: ${error.code}`)
+                case 'P2002': throw new Error('An event with this title already exists')
+                case 'P2003': throw new Error('Invalid category or organizer selected')
+                case 'P2025': throw new Error('Event not found')
+                default: throw new Error(`Database error: ${error.code}`)
             }
         }
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to update event'
-        throw new Error(errorMessage)
+        throw new Error(error instanceof Error ? error.message : 'Failed to update event')
     }
 }
 
 export async function updateCategory(formData: FormData) {
     const id = formData.get('id') as string
     const name = formData.get('name') as string
-
-    if (!id || !name) {
-        throw new Error('Category ID and name are required')
-    }
+    if (!id || !name) throw new Error('Category ID and name are required')
 
     const slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '')
-
     try {
-        await prisma.category.update({
-            where: {id},
-            data: {
-                name,
-                slug
-            }
-        })
-
+        await prisma.category.update({ where: { id }, data: { name, slug } })
         revalidatePath('/admin/categories')
-    } catch (error) {
+    } catch {
         throw new Error('Failed to update category')
     }
 }
 
 export async function deleteCategory(formData: FormData) {
     const id = formData.get('id') as string
-
-    if (!id) {
-        throw new Error('Category ID is required')
-    }
+    if (!id) throw new Error('Category ID is required')
 
     try {
         const categoryWithEvents = await prisma.category.findUnique({
-            where: {id},
-            include: {
-                _count: {
-                    select: {events: true}
-                }
-            }
+            where: { id },
+            include: { _count: { select: { events: true } } }
         })
 
         if (categoryWithEvents && categoryWithEvents._count.events > 0) {
             throw new Error(`Cannot delete category "${categoryWithEvents.name}" because it has ${categoryWithEvents._count.events} events associated with it.`)
         }
 
-        await prisma.category.delete({
-            where: {id}
-        })
-
+        await prisma.category.delete({ where: { id } })
         revalidatePath('/admin/categories')
     } catch (error) {
-        if (error instanceof Error) {
-            throw error
-        }
+        if (error instanceof Error) throw error
         throw new Error('Failed to delete category')
     }
 }
+
 export async function deleteEvent(formData: FormData) {
     try {
         const eventId = formData.get('eventId') as string
-
-        if (!eventId) {
-            throw new Error('Event ID is required')
-        }
+        if (!eventId) throw new Error('Event ID is required')
 
         const event = await prisma.event.findUnique({
             where: { id: eventId },
             select: { title: true }
         })
+        if (!event) throw new Error('Event not found')
 
-        if (!event) {
-            throw new Error('Event not found')
-        }
-
-        await prisma.event.delete({
-            where: { id: eventId }
-        })
+        await prisma.event.delete({ where: { id: eventId } })
 
         revalidatePath('/admin/delete')
         revalidatePath('/admin')
         revalidatePath('/events')
 
-        return {
-            eventId,
-            eventTitle: event.title
-        }
+        return { eventId, eventTitle: event.title }
     } catch (error) {
         console.error('Error deleting event:', error)
-
         if (error && typeof error === 'object' && 'code' in error) {
             switch (error.code) {
-                case 'P2025':
-                    throw new Error('Event not found')
-                default:
-                    throw new Error(`Database error: ${error.code}`)
+                case 'P2025': throw new Error('Event not found')
+                default: throw new Error(`Database error: ${error.code}`)
             }
         }
-
-        const errorMessage = error instanceof Error ? error.message : 'Failed to delete event'
-        throw new Error(errorMessage)
+        throw new Error(error instanceof Error ? error.message : 'Failed to delete event')
     }
 }

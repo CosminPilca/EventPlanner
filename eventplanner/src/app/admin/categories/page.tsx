@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { createCategory, updateCategory, deleteCategory } from '@/lib/actions'
+import { getCurrentUser } from '@/lib/server-auth'
 import Link from 'next/link'
 import CategoryActions from '@/components/admincomps/CategoryActions'
 
@@ -26,24 +27,12 @@ async function getCategories(): Promise<CategoryWithCount[]> {
 }
 
 export default async function ManageCategoriesPage() {
+    const currentUser = await getCurrentUser()
     const categories = await getCategories()
 
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="bg-white shadow-sm border-b">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center space-x-4">
-                            <Link href="/admin" className="text-2xl font-bold text-gray-900 hover:text-blue-600">
-                                Event Planner
-                            </Link>
-                            <span className="text-sm text-gray-500">Admin</span>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-sm text-gray-600">Manage Categories</span>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -69,7 +58,7 @@ export default async function ManageCategoriesPage() {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600  py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
+                                    className="w-full bg-blue-600 py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
                                     style={{color: 'white'}}
                                 >
                                     Create Category

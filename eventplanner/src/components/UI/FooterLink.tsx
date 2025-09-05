@@ -9,7 +9,10 @@ export default function FooterLink({ href, children }: FooterLinkProps) {
     return (
         <Link
             href={href}
-            className="hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="text-theme-muted hover:text-theme-primary theme-transition transition-colors duration-200"
+            style={{
+                color: 'var(--color-text-muted)',
+            }}
         >
             {children}
         </Link>

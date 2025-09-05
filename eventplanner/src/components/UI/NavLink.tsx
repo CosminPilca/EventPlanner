@@ -12,12 +12,18 @@ export default function NavLink({ href, children, className = '' }: NavLinkProps
         <Link
             href={href}
             className={classNames(
-                "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors",
+                "text-theme-secondary hover-theme-bg theme-transition px-3 py-2 rounded-md",
+                "hover:opacity-80 transition-all duration-200",
                 className
             )}
+            style={{
+                color: 'var(--color-text-secondary)',
+                transition: 'all 0.2s ease'
+            }}
         >
-            {children}
+            <span className="hover:text-theme-primary theme-transition">
+                {children}
+            </span>
         </Link>
     );
 }
-
