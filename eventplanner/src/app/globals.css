@@ -1,209 +1,175 @@
-@import '../../node_modules/tailwindcss/dist/lib.d.mts';
+@import "tailwindcss";
 @config "../../tailwind.config.js";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
-  --color-card: #ffffff;
-  --color-card-foreground: #171717;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #171717;
-  --color-primary: #2563eb;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #f1f5f9;
-  --color-secondary-foreground: #0f172a;
-  --color-muted: #f8fafc;
-  --color-muted-foreground: #64748b;
-  --color-accent: #f1f5f9;
-  --color-accent-foreground: #0f172a;
-  --color-destructive: #dc2626;
-  --color-destructive-foreground: #ffffff;
-  --color-border: #e2e8f0;
-  --color-input: #e2e8f0;
-  --color-ring: #2563eb;
-  --color-success: #16a34a;
-  --color-success-foreground: #ffffff;
-  --color-warning: #ea580c;
-  --color-warning-foreground: #ffffff;
 
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8fafc;
-  --color-bg-tertiary: #f1f5f9;
-  --color-bg-hover: #f8fafc;
-  --color-border-primary: #e2e8f0;
-  --color-border-secondary: #cbd5e1;
+:root {
+    --color-background: #ffffff;
+    --color-foreground: #171717;
+    --color-card: #ffffff;
+    --color-card-foreground: #171717;
+    --color-popover: #ffffff;
+    --color-popover-foreground: #171717;
+    --color-primary: #2563eb;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #f1f5f9;
+    --color-secondary-foreground: #0f172a;
+    --color-muted: #f8fafc;
+    --color-muted-foreground: #64748b;
+    --color-accent: #f1f5f9;
+    --color-accent-foreground: #0f172a;
+    --color-destructive: #dc2626;
+    --color-destructive-foreground: #ffffff;
+    --color-border: #e2e8f0;
+    --color-input: #e2e8f0;
+    --color-ring: #2563eb;
+    --color-success: #16a34a;
+    --color-success-foreground: #ffffff;
+    --color-warning: #ea580c;
+    --color-warning-foreground: #ffffff;
+
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748b;
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-bg-tertiary: #f1f5f9;
+    --color-bg-hover: #f8fafc;
+    --color-border-primary: #e2e8f0;
+    --color-border-secondary: #cbd5e1;
 }
 
-[data-theme='dark'] {
-  --color-background: #0f0f23;
-  --color-foreground: #f8fafc;
-  --color-card: #1e1e3f;
-  --color-card-foreground: #f8fafc;
-  --color-popover: #1e1e3f;
-  --color-popover-foreground: #f8fafc;
-  --color-primary: #3b82f6;
-  --color-primary-foreground: #ffffff;
-  --color-secondary: #1e293b;
-  --color-secondary-foreground: #f8fafc;
-  --color-muted: #1e293b;
-  --color-muted-foreground: #94a3b8;
-  --color-accent: #1e293b;
-  --color-accent-foreground: #f8fafc;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #ffffff;
-  --color-border: #334155;
-  --color-input: #334155;
-  --color-ring: #3b82f6;
-  --color-success: #22c55e;
-  --color-success-foreground: #ffffff;
-  --color-warning: #f97316;
-  --color-warning-foreground: #ffffff;
+[data-theme="dark"] {
+    --color-background: #0f0f23;
+    --color-foreground: #f8fafc;
+    --color-card: #1e1e3f;
+    --color-card-foreground: #f8fafc;
+    --color-popover: #1e1e3f;
+    --color-popover-foreground: #f8fafc;
+    --color-primary: #3b82f6;
+    --color-primary-foreground: #ffffff;
+    --color-secondary: #1e293b;
+    --color-secondary-foreground: #f8fafc;
+    --color-muted: #1e293b;
+    --color-muted-foreground: #94a3b8;
+    --color-accent: #1e293b;
+    --color-accent-foreground: #f8fafc;
+    --color-destructive: #ef4444;
+    --color-destructive-foreground: #ffffff;
+    --color-border: #334155;
+    --color-input: #334155;
+    --color-ring: #3b82f6;
+    --color-success: #22c55e;
+    --color-success-foreground: #ffffff;
+    --color-warning: #f97316;
+    --color-warning-foreground: #ffffff;
 
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-bg-primary: #0f0f23;
-  --color-bg-secondary: #1e1e3f;
-  --color-bg-tertiary: #1e293b;
-  --color-bg-hover: #334155;
-  --color-border-primary: #334155;
-  --color-border-secondary: #475569;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+    --color-bg-primary: #0f0f23;
+    --color-bg-secondary: #1e1e3f;
+    --color-bg-tertiary: #1e293b;
+    --color-bg-hover: #334155;
+    --color-border-primary: #334155;
+    --color-border-secondary: #475569;
 }
 
 @theme inline {
-  --color-background: var(--color-background);
-  --color-foreground: var(--color-foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--color-background);
+    --color-foreground: var(--color-foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 * {
-  border-color: var(--color-border);
+    border-color: var(--color-border);
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-input,
-textarea,
-select {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  border-color: var(--color-border-primary);
+input, textarea, select {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline-color: var(--color-primary);
-  border-color: var(--color-primary);
+input:focus, textarea:focus, select:focus {
+    outline-color: var(--color-primary);
+    border-color: var(--color-primary);
 }
 
 button {
-  transition: all 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .card {
-  background-color: var(--color-card);
-  color: var(--color-card-foreground);
-  border-color: var(--color-border);
+    background-color: var(--color-card);
+    color: var(--color-card-foreground);
+    border-color: var(--color-border);
 }
 
-.modal,
-.popover {
-  background-color: var(--color-popover);
-  color: var(--color-popover-foreground);
-  border-color: var(--color-border);
+.modal, .popover {
+    background-color: var(--color-popover);
+    color: var(--color-popover-foreground);
+    border-color: var(--color-border);
 }
 
 .bg-theme-primary {
-  background-color: var(--color-bg-primary);
+    background-color: var(--color-bg-primary);
 }
 
 .bg-theme-secondary {
-  background-color: var(--color-bg-secondary);
+    background-color: var(--color-bg-secondary);
 }
 
 .bg-theme-tertiary {
-  background-color: var(--color-bg-tertiary);
+    background-color: var(--color-bg-tertiary);
 }
 
 .text-theme-primary {
-  color: var(--color-text-primary);
+    color: var(--color-text-primary);
 }
 
 .text-theme-secondary {
-  color: var(--color-text-secondary);
+    color: var(--color-text-secondary);
 }
 
 .text-theme-muted {
-  color: var(--color-text-muted);
+    color: var(--color-text-muted);
 }
 
 .border-theme-primary {
-  border-color: var(--color-border-primary);
+    border-color: var(--color-border-primary);
 }
 
 .border-theme-secondary {
-  border-color: var(--color-border-secondary);
+    border-color: var(--color-border-secondary);
 }
 
 .hover-theme-bg:hover {
-  background-color: var(--color-bg-hover);
+    background-color: var(--color-bg-hover);
 }
 
 .theme-transition {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-input[type='datetime-local'],
-input[type='date'],
-input[type='time'] {
-  color-scheme: var(--color-scheme, light);
+input[type="datetime-local"],
+input[type="date"],
+input[type="time"] {
+    color-scheme: var(--color-scheme, light);
 }
 
-[data-theme='dark'] input[type='datetime-local'],
-[data-theme='dark'] input[type='date'],
-[data-theme='dark'] input[type='time'] {
-  color-scheme: dark;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.animate-fade-in {
-  animation: fadeIn 1s ease-in;
-}
-.animate-slide-up {
-  animation: slideUp 1s ease-in;
+[data-theme="dark"] input[type="datetime-local"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="time"] {
+    color-scheme: dark;
 }
