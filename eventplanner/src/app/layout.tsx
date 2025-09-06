@@ -1,4 +1,4 @@
-import './globals.css'
+import "./globals.css"
 import StyleProvider from '@/app/StyleProvider'
 import FooterLink from '@/components/UI/FooterLink'
 import { AuthProvider } from '@/contexts/AuthContext'
