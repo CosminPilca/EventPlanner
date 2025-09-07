@@ -30,7 +30,7 @@ export default async function AdminPage() {
               </h3>
               {dbStatus.connected && (
                 <p className="text-sm mt-1">
-                  SQLite Version: {dbStatus.version}
+                  DB Version: {dbStatus.version}
                 </p>
               )}
               {dbStatus.error && (

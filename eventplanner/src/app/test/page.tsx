@@ -24,18 +24,18 @@ async function runDatabaseTests() {
   }
 
   try {
-    const version = await prisma.$queryRaw`SELECT sqlite_version() as version`
-    //@ts-ignore
+    const version = await prisma.$queryRaw`SELECT version();`
     tests.push({
-      name: 'SQLite Version',
+      name: 'DB Version',
       status: 'passed',
+      //@ts-ignore
       message: `Version: ${version[0]?.version}`,
     })
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : 'Version check failed'
     tests.push({
-      name: 'SQLite Version',
+      name: 'DB Version',
       status: 'failed',
       message: errorMessage,
     })

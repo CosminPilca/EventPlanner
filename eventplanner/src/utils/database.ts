@@ -12,11 +12,12 @@ export const getAdminStats = async () => {
 export const testDatabaseConnection = async () => {
   try {
     await prisma.$connect()
-    const version = await prisma.$queryRaw`SELECT sqlite_version() as version`
+    const version = await prisma.$queryRaw`SELECT version();`
     await prisma.$disconnect()
 
-    return {
+      return {
       connected: true,
+      // @ts-ignore
       version: version[0]?.version,
       error: null,
     }

@@ -11,7 +11,7 @@ export async function GET() {
       prisma.category.count(),
     ])
 
-    const testQuery = await prisma.$queryRaw`SELECT sqlite_version() as version`
+    const testQuery = await prisma.$queryRaw`SELECT version();`
 
     return NextResponse.json({
       success: true,
